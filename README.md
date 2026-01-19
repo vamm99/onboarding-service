@@ -110,6 +110,82 @@ pnpm run start:dev
 
 El servidor quedará disponible en `http://localhost:${PORT}`.
 
+## 📚 Documentación de la API (Swagger)
+
+La API cuenta con documentación interactiva mediante Swagger UI, accesible en:
+
+```
+http://localhost:${PORT}/api
+```
+
+### 🔐 Seguridad y Encriptación
+
+**Importante:** Esta API utiliza encriptación AES para datos sensibles. Los endpoints marcados con `@UseInterceptors(CryptoInterceptor)` requieren cuerpos de solicitud encriptados.
+
+#### Proceso de Encriptación:
+
+1. **Crear objeto DTO** con los campos requeridos
+2. **Convertir a JSON string** el DTO
+3. **Encriptar con AES** el JSON string
+4. **Enviar datos encriptados** en el formato: `{ "encryptedData": "string_encriptado_aqui" }`
+
+#### Ejemplo de Flujo:
+
+```javascript
+// 1. DTO original
+const loginData = {
+  username: "john_doe",
+  password: "SecurePass123"
+};
+
+// 2. Convertir a JSON
+const jsonString = JSON.stringify(loginData);
+// Result: '{"username":"john_doe","password":"SecurePass123"}'
+
+// 3. Encriptar con AES
+const encrypted = aesEncrypt(jsonString, encryptionKey);
+// Result: "U2FsdGVkX1/tI5pOUvLDpOul86G6RU3GqjxWA/Li4rqe..."
+
+// 4. Enviar request
+fetch('/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    encryptedData: encrypted
+  })
+});
+```
+
+### 📋 Schemas Disponibles
+
+La documentación incluye los siguientes schemas para referencia:
+
+#### Autenticación
+- **LoginDto** - Credenciales de acceso
+- **RegisterDto** - Registro de nuevos usuarios
+
+#### Onboarding  
+- **RegisterOnboardingDto** - Proceso de onboarding de clientes
+
+#### Productos
+- **RegisterProductDto** - Registro de nuevos productos
+- **UpdateProductDto** - Actualización de productos existentes
+
+#### Formatos de Encriptación
+- **EncryptedRequestDto** - Formato para requests encriptados
+- **EncryptedResponseDto** - Formato para respuestas encriptadas
+
+### 🔍 Endpoints Documentados
+
+Todos los endpoints cuentan con documentación detallada incluyendo:
+- Parámetros requeridos y opcionales
+- Ejemplos de requests y responses
+- Códigos de estado HTTP esperados
+- Requisitos de autenticación
+- Formatos de datos encriptados cuando aplica
+
+Visita la documentación interactiva para explorar todos los endpoints disponibles.
+
 ## Project setup
 
 ```bash
