@@ -95,6 +95,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @UseInterceptors(CryptoInterceptor)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Refresh access token' })
   @ApiResponse({ status: 200, description: 'Token refreshed successfully' })
