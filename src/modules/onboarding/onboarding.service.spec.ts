@@ -10,14 +10,12 @@ describe('OnboardingService', () => {
   let repository: OnboardingRepository;
   let encryptionService: EncryptionService;
 
-  // Mock del repository - simula las funciones de base de datos
   const mockOnboardingRepository = {
     getOnboardingByUserId: jest.fn(),
     create: jest.fn(),
     getAllOnboardingsByUserId: jest.fn(),
   };
 
-  // Mock del servicio de encriptación
   const mockEncryptionService = {
     encrypt: jest.fn(),
     decrypt: jest.fn(),
@@ -42,7 +40,6 @@ describe('OnboardingService', () => {
     repository = module.get<OnboardingRepository>(OnboardingRepository);
     encryptionService = module.get<EncryptionService>(EncryptionService);
 
-    // Limpiar los mocks antes de cada prueba
     jest.clearAllMocks();
   });
 
@@ -54,7 +51,6 @@ describe('OnboardingService', () => {
 
   describe('registerOnboarding', () => {
     it('should register a new onboarding successfully', async () => {
-      // 1. ARRANGE (Preparar) - Preparamos los datos de prueba
       const userId = '507f1f77bcf86cd799439011';
       const onboardingDto: RegisterOnboardingDto = {
         fullName: 'Juan Pérez',
@@ -77,17 +73,14 @@ describe('OnboardingService', () => {
         status: 'REQUESTED',
       };
 
-      // 2. Configuramos los mocks - les decimos qué devolver
-      mockOnboardingRepository.getOnboardingByUserId.mockResolvedValue(null); // No existe usuario previo
+      mockOnboardingRepository.getOnboardingByUserId.mockResolvedValue(null);
       mockEncryptionService.encrypt.mockImplementation(
         (value) => `encrypted_${value}`,
-      ); // Simula encriptación
-      mockOnboardingRepository.create.mockResolvedValue(createdOnboarding); // Simula creación en DB
+      );
+      mockOnboardingRepository.create.mockResolvedValue(createdOnboarding);
 
-      // 3. ACT (Actuar) - Ejecutamos el método que queremos probar
       const result = await service.registerOnboarding(userId, onboardingDto);
 
-      // 4. ASSERT (Afirmar) - Verificamos que todo funcionó como esperábamos
       expect(
         mockOnboardingRepository.getOnboardingByUserId,
       ).toHaveBeenCalledWith(userId);

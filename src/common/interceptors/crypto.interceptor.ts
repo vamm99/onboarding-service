@@ -24,12 +24,10 @@ export class CryptoInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest<Request>();
 
-    // 1. LÓGICA DE ENTRADA (Request)
     if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
       this.decryptRequest(request);
     }
 
-    // 2. LÓGICA DE SALIDA (Response)
     return next.handle().pipe(
       map((data) => {
         return this.encryptResponse(data);
@@ -57,7 +55,6 @@ export class CryptoInterceptor implements NestInterceptor {
         throw new BadRequestException('Invalid encryption format or key');
       }
 
-      // Reemplazamos el body para que el Controller reciba el JSON limpio
       request.body = JSON.parse(decryptedText) as Record<string, unknown>;
       this.logger.log(`Incoming data decrypted for: ${request.url}`);
     } catch (error: unknown) {
@@ -71,7 +68,6 @@ export class CryptoInterceptor implements NestInterceptor {
     if (!data) return data;
 
     try {
-      // Encriptamos la respuesta que viene del Controller
       const encryptedData = CryptoJS.AES.encrypt(
         JSON.stringify(data),
         this.encryptionKey,

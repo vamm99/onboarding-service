@@ -24,7 +24,7 @@ export class Onboarding extends Document {
   @Prop({ required: true, min: 0 })
   initialAmount: number;
 
-  @Prop({ default: 'REQUESTED' }) // Estado requerido por la imagen
+  @Prop({ default: 'REQUESTED' })
   status: string;
 }
 

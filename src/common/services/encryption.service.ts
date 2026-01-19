@@ -18,7 +18,6 @@ export class EncryptionService {
       );
     }
 
-    // Ensure key is exactly 32 bytes for AES-256
     this.key = crypto.scryptSync(encryptionKey, 'salt', 32);
   }
 
@@ -32,7 +31,6 @@ export class EncryptionService {
       let encrypted = cipher.update(text, 'utf8', 'hex');
       encrypted += cipher.final('hex');
 
-      // Store IV with encrypted data (IV:EncryptedData)
       return `${iv.toString('hex')}:${encrypted}`;
     } catch (error) {
       this.logger.error('Encryption failed:', error);
